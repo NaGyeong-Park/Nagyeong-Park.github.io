@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import PostCard from "@components/posts/PostCard.astro";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+---
+
+<Layout>
+  <section>
+    <ul>
+      {
+        posts.map((post) => (
+          <li>
+            <PostCard
+              id={post.id}
+              title={post.data.title}
+              thumbnail={post.data.thumbnail ?? "./og.jpg"}
+              publishDate={post.data.publishDate}
+              category={post.data.categories[0]}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

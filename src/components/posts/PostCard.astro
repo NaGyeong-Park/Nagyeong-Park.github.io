@@ -1,0 +1,20 @@
+---
+import FormattedDate from "@components/FormattedDate.astro";
+interface Props {
+  id: string;
+  thumbnail: string;
+  title: string;
+  publishDate: Date;
+  category: string;
+}
+
+const { id, thumbnail, title, publishDate, category } = Astro.props;
+---
+
+<a href={`/posts/${id}/`}>
+  <img src={thumbnail} alt={title} />
+  <h4>{title}</h4>
+  <p>
+    <FormattedDate date={publishDate} />
+  </p>
+</a>

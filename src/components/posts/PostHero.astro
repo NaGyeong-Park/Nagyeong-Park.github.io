@@ -1,0 +1,29 @@
+---
+import FormattedDate from "@components/FormattedDate.astro";
+import type { CollectionEntry } from "astro:content";
+
+type Props = CollectionEntry<"blog">;
+
+const { data } = Astro.props;
+const { title, publishDate, updatedDate, thumbnail } = data;
+---
+
+<div>
+  {thumbnail && <img width={300} height={180} src={thumbnail} alt="" />}
+</div>
+<div>
+  <div>
+    <div>
+      <FormattedDate date={publishDate} />
+      {
+        updatedDate && (
+          <div>
+            Last updated on <FormattedDate date={updatedDate} />
+          </div>
+        )
+      }
+    </div>
+    <h1>{title}</h1>
+    <hr />
+  </div>
+</div>
