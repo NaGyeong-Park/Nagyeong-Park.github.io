@@ -3,17 +3,17 @@ import { GITHUB_URL } from "@constants/common";
 import { Icon } from "astro-icon/components";
 ---
 
-<div>
-  <a href={GITHUB_URL} target="_blank">
-    <Icon name="github" width={32} height={32} />
+<div class="flex justify-center gap-4">
+  <a href={GITHUB_URL} target="_blank" class="inline-block w-fit">
+    <Icon name="github" width={30} height={30} />
+    <span class="sr-only">Go to Nagyeong's GitHub repo</span>
+  </a>
+  <a
+    href="mailto:ngp.july@gmail.com"
+    target="_blank"
+    class="inline-block w-fit"
+  >
+    <Icon name="mdi:email" width={32} height={32} />
     <span class="sr-only">Go to Nagyeong's GitHub repo</span>
   </a>
 </div>
-<style>
-  .social-links {
-    display: flex;
-    justify-content: center;
-    gap: 1em;
-    margin-top: 1em;
-  }
-</style>

@@ -6,11 +6,6 @@ body {
     Roboto,
     sans-serif;
 }
-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
 .sr-only {
   border: 0;
   padding: 0;

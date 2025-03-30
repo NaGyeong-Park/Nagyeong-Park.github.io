@@ -14,13 +14,26 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const { title, description, thumbnail } = post.data;
+const {
+  title,
+  description,
+  thumbnail = "./og.jpg",
+  publishDate,
+  categories,
+} = post.data;
 const { Content } = await render(post);
 ---
 
 <Layout title={title} description={description} ogImage={thumbnail}>
   <article>
-    <PostHero {...post} />
-    <Content />
+    <PostHero
+      title={title}
+      thumbnail={thumbnail}
+      date={publishDate}
+      tag={categories[0]}
+    />
+    <div class="pt-16">
+      <Content />
+    </div>
   </article>
 </Layout>

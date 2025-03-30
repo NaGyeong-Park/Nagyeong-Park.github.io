@@ -1,11 +1,12 @@
 ---
-import { SITE_TITLE } from "@constants/common";
 import SocialLinks from "./SocialLinks.astro";
 ---
 
 <header>
-  <nav>
-    <h2><a href="/posts">{SITE_TITLE}</a></h2>
+  <nav class="flex items-center justify-between px-10 py-2">
+    <h2 class="text-xl font-semibold italic leading-[1.2]">
+      <a href="/posts/">Nlog.</a>
+    </h2>
     <SocialLinks />
   </nav>
 </header>

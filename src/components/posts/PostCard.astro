@@ -4,17 +4,27 @@ interface Props {
   id: string;
   thumbnail: string;
   title: string;
+  description: string;
   publishDate: Date;
   category: string;
 }
 
-const { id, thumbnail, title, publishDate, category } = Astro.props;
+const { id, thumbnail, title, description, publishDate, category } =
+  Astro.props;
 ---
 
-<a href={`/posts/${id}/`}>
-  <img src={thumbnail} alt={title} />
-  <h4>{title}</h4>
-  <p>
+<a href={`/posts/${id}/`} class="block relative w-full h-full pb-3">
+  <div class="absolute top-3 left-3 px-3 py-1 bg-neutral-700/20 rounded-md">
+    <span class="block text-white text-sm align-text-middle font-light"
+      >{category}</span
+    >
+  </div>
+  <img src={thumbnail} alt={title} class="rounded-md mb-3" />
+  <p class="text-xs text-neutral-600 mb-1 font-light">
     <FormattedDate date={publishDate} />
+  </p>
+  <h4 class="text-lg font-semibold text-neutral-900">{title}</h4>
+  <p class="text-base/5 text-neutral-600 line-clamp-3">
+    {description}
   </p>
 </a>

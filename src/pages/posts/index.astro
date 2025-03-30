@@ -10,13 +10,14 @@ const posts = (await getCollection("blog")).sort(
 
 <Layout>
   <section>
-    <ul>
+    <ul class="grid grid-cols-3 gap-4">
       {
         posts.map((post) => (
-          <li>
+          <li class="flex-1  max-h-[320px]">
             <PostCard
               id={post.id}
               title={post.data.title}
+              description={post.data.description}
               thumbnail={post.data.thumbnail ?? "./og.jpg"}
               publishDate={post.data.publishDate}
               category={post.data.categories[0]}
