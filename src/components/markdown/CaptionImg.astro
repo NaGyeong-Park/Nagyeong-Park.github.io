@@ -1,0 +1,14 @@
+---
+import type { ImgAttributes } from "astro:assets";
+import Img from "./default/Img.astro";
+
+interface Props extends ImgAttributes {
+  caption: string;
+}
+const { caption, ...props } = Astro.props;
+---
+
+<figure class="mx-auto mb-3 text-center">
+  <Img {...props} />
+  <figcaption class="text-neutral-400 text-xs">{caption}</figcaption>
+</figure>

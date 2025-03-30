@@ -1,0 +1,8 @@
+---
+import type { ImgAttributes } from "astro:assets";
+
+type Props = ImgAttributes;
+const props = Astro.props;
+---
+
+<img class="w-lg mx-auto my-2 rounded-lg" {...props} />

@@ -40,7 +40,9 @@ Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sap
 
 ### Output
 
-![blog placeholder](/example.jpg)
+import CaptionImg from "@components/markdown/CaptionImg.astro";
+
+<CaptionImg src="/example.jpg" caption="반갑습니다 헤헤" />
 
 ## Blockquotes
 
@@ -212,4 +214,6 @@ X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
 
 Press <kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>Delete</kbd> to end the session.
 
-Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.
+import Mark from "@components/markdown/Mark.astro";
+
+Most <Mark>salamanders</Mark> are nocturnal, and hunt for insects, worms, and other small creatures.
