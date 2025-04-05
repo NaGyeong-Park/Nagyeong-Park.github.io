@@ -1,10 +1,9 @@
 ---
-import SocialLinks from "./SocialLinks.astro";
-
 const today = new Date();
 ---
 
-<footer>
-  &copy; {today.getFullYear()} Nagyeong Park. All rights reserved.
-  <SocialLinks />
+<footer class="text-center pt-12 pb-8">
+  <p class="text-xs text-neutral-500 pb-3">
+    &copy; {today.getFullYear()} Nagyeong Park. All rights reserved.
+  </p>
 </footer>

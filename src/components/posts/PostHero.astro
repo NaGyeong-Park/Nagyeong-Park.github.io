@@ -2,28 +2,38 @@
 import FormattedDate from "@components/FormattedDate.astro";
 import type { CollectionEntry } from "astro:content";
 
-type Props = CollectionEntry<"blog">;
+interface Props {
+  title: string;
+  date: Date;
+  thumbnail: string;
+  tag: string;
+}
 
-const { data } = Astro.props;
-const { title, publishDate, updatedDate, thumbnail } = data;
+const { title, date, thumbnail, tag } = Astro.props;
 ---
 
 <div>
-  {thumbnail && <img width={300} height={180} src={thumbnail} alt="" />}
-</div>
-<div>
-  <div>
-    <div>
-      <FormattedDate date={publishDate} />
-      {
-        updatedDate && (
-          <div>
-            Last updated on <FormattedDate date={updatedDate} />
-          </div>
-        )
-      }
+  <div class="relative w-3/4 m-auto">
+    <img
+      src={thumbnail}
+      alt={title}
+      class="rounded-xl w-full aspect-[5/3] object-cover"
+    />
+    <div class="absolute top-0 left-0 text-4xl font-light p-3">
+      <!-- TODO: title style -->
+      <span class="block w-fit bg-white rounded-2xl p-3 whitespace-pre"
+        >{title}</span
+      >
     </div>
-    <h1>{title}</h1>
-    <hr />
+    <div
+      class="absolute top-0 w-full pt-4 pr-6 flex flex-col gap-3 justify-end items-end text-lg"
+    >
+      <span class="px-3 py-1 rounded-3xl bg-white">
+        <FormattedDate date={date} /></span
+      >
+      <span class="px-3 py-1 rounded-3xl border-neutral-900 border-2">
+        # {tag}</span
+      >
+    </div>
   </div>
 </div>
