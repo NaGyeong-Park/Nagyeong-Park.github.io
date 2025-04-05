@@ -9,8 +9,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  // FIXME
-  site: "https://example.com",
+  site: "https://nagyeong-park.github.io",
   integrations: [mdx(), sitemap(), icon()],
   vite: {
     plugins: [tailwindcss()],
