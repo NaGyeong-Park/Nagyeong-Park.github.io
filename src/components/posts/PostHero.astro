@@ -1,6 +1,5 @@
 ---
 import FormattedDate from "@components/FormattedDate.astro";
-import type { CollectionEntry } from "astro:content";
 
 interface Props {
   title: string;
@@ -10,23 +9,36 @@ interface Props {
 }
 
 const { title, date, thumbnail, tag } = Astro.props;
+const titleList = title.split("\n");
 ---
 
 <div>
-  <div class="relative w-3/4 m-auto">
+  <div class="relative w-full lg:w-3/4 m-auto">
     <img
       src={thumbnail}
       alt={title}
       class="rounded-xl w-full aspect-[5/3] object-cover"
     />
-    <div class="absolute top-0 left-0 text-4xl font-light p-3">
-      <!-- TODO: title style -->
-      <span class="block w-fit bg-white rounded-2xl p-3 whitespace-pre"
-        >{title}</span
-      >
+    <div
+      class="absolute w-full h-full text-lg lg:text-3xl font-semibold inline-flex flex-col"
+      style={{
+        top: "-20px",
+        left: "-20px",
+        borderTop: "20px solid white",
+        borderLeft: "20px solid white",
+        filter: "url('#gooey')",
+      }}
+    >
+      {
+        titleList.map((line) => (
+          <span class="inline w-fit whitespace-pre bg-white pb-3 pr-2">
+            {line}
+          </span>
+        ))
+      }
     </div>
     <div
-      class="absolute top-0 w-full pt-4 pr-6 flex flex-col gap-3 justify-end items-end text-lg"
+      class="absolute top-0 w-full h-full p-2 lg:p-4 flex flex-col gap-3 justify-end items-end text-sm lg:text-lg"
     >
       <span class="px-3 py-1 rounded-3xl bg-white">
         <FormattedDate date={date} /></span
@@ -36,4 +48,19 @@ const { title, date, thumbnail, tag } = Astro.props;
       >
     </div>
   </div>
+  <svg width="0" height="0">
+    <defs>
+      <filter id="gooey">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"
+        ></feGaussianBlur>
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10"
+          result="alpha"></feColorMatrix>
+        <feComposite in="SourceGraphic" in2="alpha" operator="atop"
+        ></feComposite>
+      </filter>
+    </defs>
+  </svg>
 </div>
