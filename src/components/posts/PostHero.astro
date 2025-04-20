@@ -31,7 +31,7 @@ const titleList = title.split("\n");
     >
       {
         titleList.map((line) => (
-          <span class="inline w-fit whitespace-pre bg-white pb-3 pr-2">
+          <span class="gooey-text inline w-fit whitespace-pre bg-white pb-1 pr-0.5 lg:pb-3 lg:pr-2">
             {line}
           </span>
         ))
@@ -51,7 +51,7 @@ const titleList = title.split("\n");
   <svg width="0" height="0">
     <defs>
       <filter id="gooey">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"
         ></feGaussianBlur>
         <feColorMatrix
           in="blur"
@@ -64,3 +64,25 @@ const titleList = title.split("\n");
     </defs>
   </svg>
 </div>
+
+<style>
+  @keyframes drop {
+    from {
+      opacity: 0;
+      transform: translateY(-50%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+
+  .gooey-text:last-child {
+    animation-delay: 0.5s;
+  }
+
+  .gooey-text {
+    animation: drop 1s;
+    animation-fill-mode: both;
+  }
+</style>
