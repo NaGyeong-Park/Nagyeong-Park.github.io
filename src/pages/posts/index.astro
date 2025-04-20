@@ -13,7 +13,7 @@ const posts = (await getCollection("blog")).sort(
   <section>
     {
       posts.length > 0 ? (
-        <ul class="grid grid-cols-3 gap-4">
+        <ul class="grid lg:grid-cols-3 gap-4">
           {posts.map((post) => (
             <li class="flex-1  max-h-[320px]">
               <PostCard

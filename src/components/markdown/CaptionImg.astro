@@ -10,5 +10,7 @@ const { caption, ...props } = Astro.props;
 
 <figure class="mx-auto mb-3 text-center">
   <Img {...props} />
-  <figcaption class="text-neutral-400 text-xs">{caption}</figcaption>
+  <figcaption class="text-neutral-400 text-xs whitespace-pre-line">
+    {caption}
+  </figcaption>
 </figure>
