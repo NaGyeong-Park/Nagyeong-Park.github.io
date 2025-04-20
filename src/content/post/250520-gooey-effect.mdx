@@ -1,0 +1,257 @@
+---
+title: "눈길을 사로잡는 Gooey Effect:\nCSS vs JS vs SVG Filter"
+description: "Gooey Effect를 세 가지 방법으로 구현하고, 성능 비교를 해보았습니다."
+publishDate: "2025.04.20"
+thumbnail: "/post/gooey-effect-green.png"
+categories: ["개발"]
+---
+
+import CaptionImg from "src/components/markdown/CaptionImg.astro";
+import Caption from "src/components/markdown/Caption.astro";
+
+블로그를 잡지처럼, 시각적으로 세련되게 만들고 싶었습니다. 독자가 글을 읽기 전에 시선을 사로잡을 수 있도록 포스트 상단에 제목과 썸네일 조합이 강렬하고도 세련되게 보이길 바랐습니다. 찾다 보니 특이한 디자인이 눈에 들어왔습니다. 제목 뒤로 물방울처럼 흐르는 곡선 배경이 텍스트를 감싸는 효과였는데, "Gooey Effect"라고 불렀습니다. 이 효과를 구현하면서 SVG filter라는 개념을 처음 알게 됐는데, 문득 이런 생각이 들었습니다.
+
+"CSS만으로도 만들 수 있지 않을까? 그럼 성능은 어떨까?"
+
+그래서 Gooey Effect를 **CSS Only**, **CSS + JS**, **SVG Filter** 세 가지 방식으로 직접 구현해보고 성능까지 비교해봤습니다.
+
+<CaptionImg
+  caption={
+    "출처: Blog and Magazine Website, Levi Wilson for QClay, dribbble. \nhttps://dribbble.com/shots/20895614-Blog-and-Magazine-Website"
+  }
+  src="https://cdn.dribbble.com/userupload/5300979/file/original-cdb602e6dfe3e38dacb85a1c0027173b.jpg?resize=2048x1536&vertical=center"
+  alt="gooey effect 예시 이미지"
+/>
+<br />
+<br />
+<br />
+---
+
+# Gooey Effect란?
+
+<video
+  width="500"
+  controls
+  alt="gooey effect design video"
+  style={{ margin: "auto", paddingBottom: "20px" }}
+>
+  <source
+    src="https://cdn.dribbble.com/userupload/4260456/file/original-1978d370d47796b85775c13eda9e85f0.mp4"
+    type="video/mp4"
+  />
+</video>
+
+<Caption>
+  {
+    "출처: 365MAG - Article, Ruslan Siiz, dribbble.com/shots/20324434-365MAG-Article"
+  }
+</Caption>
+
+Gooey는 _soft and sticky,_ 즉 부드럽고 끈적거리는 느낌으로 Gooey Effect는
+요소들이 끈적거리며 서로 융합되는 시각적
+효과입니다[1](https://css-tricks.com/gooey-effect/),
+[2](https://gooey-react.netlify.app/). 이 효과는 요소 사이 경계가 부드럽게
+녹아들어 유기적이고 생동감 있는 느낌을 줍니다.
+
+Gooey Effect의 핵심은 다른 요소들과 유기적으로 달라붙는 것입니다. CSS는 요소의 위치는 지정할 수 있지만, 요소 간의 상호작용 스타일을 직접 제어하기 어렵기 때문에 Gooey Effect를 개발하기에는 어려움이 있습니다. 따라서 CSS, CSS+JS로 구현할 때는 텍스트요소의 위치 정보를 이용하여 텍스트 가장자리에 도형을 붙여주는 방식으로 구현하였습니다. SVG Filter의 경우 다른 요소들이 합해진 것에 효과를 줄 수 있기 때문에 합성된 것에 효과를 조합하여 구현하였습니다.
+
+---
+
+# 구현
+
+## 1. CSS Only
+
+<p
+  class="codepen"
+  data-height="300"
+  data-default-tab="html,result"
+  data-slug-hash="MYYaJMp"
+  data-pen-title="gooey-css"
+  data-user="NaGyeong-Park"
+  style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
+></p>
+<script async src="https://public.codepenassets.com/embed/index.js"></script>
+CSS 만으로 구현할 때는 가상 요소를 이용하여 텍스트 가장자리에 곡선 도형을
+붙여주었습니다. 이 방식은 "상위 텍스트 길이는 하위 텍스트의 길이 + 곡선 도형의
+길이보다 길다(짧다)"라는 전제가 필요합니다.
+
+가장자리에 붙여줄 곡선 도형은 `mask-image` 속성을 사용하여 만들었습니다. `mask-image`는 요소의 어느 부분을 표시할지 결정하는 속성으로, 중앙에서부터 가장자리로 갈수록 투명도가 증가하는 `radial-gradient`을 적용하면 경계가 부드러워 보이는 효과를 낼 수 있습니다.SVG 없이도 벡터 기반 마스크를 사용할 수 있어 반응형 디자인에 유리한 점이 있습니다. 참고로 도형을 직접 사용하지 않고, 도형의 그림자를 이용하여 만들 수도 있습니다. box-shadow로 만든 [예시](https://stackoverflow.com/questions/76416933/how-to-overlay-an-image-with-text-that-has-a-background-with-rounded-corners)를 살펴보세요.
+
+이 방식은 CSS로만 구현되어 유지보수가 간편하다는 장점이 있지만 텍스트 길이 전제로 인해 텍스트 길이가 정해져 있는 구현에서 유리합니다.
+
+## 2. CSS + Javascript
+
+<p
+  class="codepen"
+  data-height="300"
+  data-default-tab="html,result"
+  data-slug-hash="yyyYMNM"
+  data-pen-title="gooey-css-javascript"
+  data-user="NaGyeong-Park"
+  style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
+></p>
+<script async src="https://public.codepenassets.com/embed/index.js"></script>
+CSS와 Javascript를 이용한 방식은 텍스트 길이를 계산하여 가상 요소를 이용하여
+텍스트 가장자리에 곡선 도형을 붙여주는 방식입니다.
+
+현재 텍스트의 길이와 상위(하위) 텍스트의 길이를 비교하여 현재 텍스트의 길이보다 상위(하위) 텍스트 길이가 긴 경우 상단(하단)에 곡선 도형을 추가합니다. 또한 현재 텍스트의 상위(하위) 텍스트가 없는 경우 상단(하단)에 곡선 도형을 추가합니다.
+
+CSS 구현을 기반으로 하면서도 텍스트 길이 변화에 동적으로 대응할 수 있다는 장점이 있습니다. 하지만 코드 복잡성이 증가할 수 있고, `.offsetWidth` 로 DOM 크기를 측정하기 때문에 요소가 많아지면 렌더링 비용이 늘어날 수 있습니다. 또한 `DOMContentLoaded` 시점에 한 번만 계산되기 때문에, 글자가 로딩 이후에 바뀌면 대응하기 어렵습니다. 로딩 이후에 글자가 변할 수 있다면 `MutationObserver`를 이용할 수 있습니다.
+
+## 3. SVG Filter
+
+<p
+  class="codepen"
+  data-height="300"
+  data-default-tab="html,result"
+  data-slug-hash="OPPypZX"
+  data-pen-title="gooey-filter"
+  data-user="NaGyeong-Park"
+  style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
+></p>
+<script async src="https://public.codepenassets.com/embed/index.js"></script>
+SVG Filter를 활용한 방식은 세 가지 중에서 가장 부드럽고 유기적인 느낌을
+만들어냅니다. 텍스트에 블러 효과를 적용한 후, 알파값을 기준으로 마스크를
+생성하는 방식이기 때문입니다.
+
+적용할 텍스트의 전체 컨테이너를 `SourceGraphic`으로 받아, `feGaussianBlur`로 텍스트의 경계를 흐리게 만들고, `feColorMatrix`로 알파값을 조정하면 텍스트 경계에 자연스러운 윤곽이 생깁니다. 이렇게 만든 효과를 `feComposite` 를 이용해 원래 텍스트랑 합칩니다.
+
+부드럽고 유기적인 효과를 느낄 수 있지만 필터 적용 영역이 커질수록 GPU 연산 비용이 커져서 성능이 떨어질 수 있다는 단점이 있습니다. 또한 필터가 적용된 후의 결과는 단일 비트맵처럼 처리되기 때문에 디버깅 및 세부 조정이 어렵습니다. SVG Filter는 익숙하지 않은 개발자에게는 학습 곡선이 있을 수 있습니다.
+
+## 구현 방법 비교
+
+| 방식     | 동적 대응 | 스타일            | 성능 | 한계점             |
+| -------- | --------- | ----------------- | ---- | ------------------ |
+| CSS      | X         | 약간 부자연스러움 | 좋음 | 동적인 대응 불가능 |
+| CSS + JS | O         | 약간 부자연스러움 | 중간 | 리플로우           |
+| SVG 필터 | O         | 매우 자연스러움   | 중간 | 성능 부담          |
+
+<br />
+<br />
+---
+
+# 성능
+
+구현 방식에 따른 세 가지 구현 방식에 대해 다음 시나리오로 성능을 비교해봤습니다:
+
+1. 기본 효과
+2. 기본효과 + `:hover` 스타일
+3. 기본효과 + Keyframe 애니메이션
+
+<br />
+크롬 브라우저의 Performance 탭을 이용해서 새로고침 후 5초동안 녹화하여 FPS,
+스크립팅 시간, 렌더링 시간, 페인팅 시간을 측정했습니다.
+
+평균 FPS를 통해 화면에 얼마나 부드럽게 그려졌는지 확인하고, 최소 FPS를 통해 버벅거림이 발생했는지 확인했습니다. FPS가 낮다면 끊기거나 버벅거리기 때문에 사용자 경험에 중요한 요인입니다.
+
+스크립팅 시간을 통해 렌더링 지연이 발생을 확인하고 렌더링 시간을 통해 레이아웃 계산 및 스타일 처리 시간을 확인했습니다. 렌더링 시간은 복잡한 레이아웃, 중첩된 스타일일수록 증가하는데, 두가지 지표 모두 높을수록 지연시간이 높습니다. 페인팅 시간은 실제로 화면에 픽셀을 그리는 시간을 측정하기 때문에 화면 반응이 느린지 확인할 수 있습니다.
+
+CSS와 SVG Filter를 사용해도 JavaScript 관련 성능 지표가 측정되는데요, 이는 브라우저의 내부 동작 방식 때문입니다. 브라우저의 렌더링 엔진은 복잡한 CSS 처리, SVG Filter 연산을 수행하면서 내부적으로 최적화 작업을 하는데, 이 과정에서 V8 엔진의 일부 기능을 간접적으로 활용합니다. 또한, 프로파일링 도구는 웹 페이지의 전체 활동을 추적하기 때문에 JavaScript를 직접 실행하지 않더라도 관련 내부 프로세스가 측정 결과에 포함될 수 있습니다.
+
+> 참고로 이 성능 측정은 특정 환경과 조건에서 테스트한 결과라 실제 서비스 환경에서는 다를 수 있습니다.
+
+<br />
+<br />
+## 기본 효과
+
+| 지표               | CSS       | CSS+JS | SVG Filter |
+| ------------------ | --------- | ------ | ---------- |
+| 평균 FPS           | 85.65     | 75.15  | **235.19** |
+| 최소 FPS           | **22.99** | 22.56  | 20.69      |
+| 스크립팅 시간 (ms) | 1.96      | 4.25   | **0.91**   |
+| 렌더링 시간 (ms)   | 0.97      | 1.33   | **0.93**   |
+| 페인팅 시간 (ms)   | 0.36      | 0.39   | **0.29**   |
+
+SVG Filter는 GPU 가속을 활용할 수 있어 대체로 가장 좋은 성능을 보입니다. 반면, CSS와 CSS+JS는 CPU 중심의 처리가 많아 상대적으로 비용이 큽니다. 특히 CSS+JS는 스크립팅 비용이 더 커서 성능 저하 요인이 됩니다.
+
+## Hover 효과 적용
+
+- css로 이미지 테두리와 텍스트 효과에 `:hover` 스타일 추가. 마우스 hover 상호작용
+  후 측정한 결과
+
+<p
+  class="codepen"
+  data-height="300"
+  data-default-tab="html,result"
+  data-slug-hash="PwwPpeN"
+  data-pen-title="gooey-hover"
+  data-user="NaGyeong-Park"
+  style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
+></p>
+<script async src="https://public.codepenassets.com/embed/index.js"></script>
+
+<br />
+
+| 지표               | CSS      | CSS+JS   | SVG Filter |
+| ------------------ | -------- | -------- | ---------- |
+| 평균 FPS           | 104.92   | 104.96   | **120.20** |
+| 최소 FPS           | 1.21     | 1.14     | **2.81**   |
+| 스크립팅 시간 (ms) | **1.20** | 6.45     | 3.00       |
+| 렌더링 시간 (ms)   | 2.91     | **1.39** | 1.79       |
+| 페인팅 시간 (ms)   | 0.83     | 0.74     | **0.57**   |
+
+Hover 효과에서도 SVG Filter는 평균 FPS와 최소 FPS, 페인팅 시간 측면에서 가장 우수합니다. CSS+JS는 스크립팅 시간에서 큰 비용이 발생하며, CSS는 최소 FPS가 크게 떨어져 사용성에 영향을 줄 수 있습니다.
+
+## keyframe 애니메이션 적용
+
+- 아래로 흐르는 애니메이션(`transform: translateY`, `opacity`) 적용
+
+<p
+  class="codepen"
+  data-height="300"
+  data-default-tab="html,result"
+  data-slug-hash="pvvjPoV"
+  data-pen-title="gooey-animation"
+  data-user="NaGyeong-Park"
+  style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
+></p>
+<script async src="https://public.codepenassets.com/embed/index.js"></script>
+
+<br />
+
+| 지표               | CSS      | CSS+JS     | SVG Filter |
+| ------------------ | -------- | ---------- | ---------- |
+| 평균 FPS           | 179.06   | **186.22** | 128.41     |
+| 최소 FPS           | 30.11    | **58.65**  | 37.93      |
+| 스크립팅 시간 (ms) | **2.48** | **2.48**   | 2.90       |
+| 렌더링 시간 (ms)   | 2.84     | 2.87       | **2.43**   |
+| 페인팅 시간 (ms)   | 0.40     | 0.42       | **0.32**   |
+
+CSS+JS는 평균 FPS와 최소 FPS 모두에서 가장 높은 수치를 기록했습니다. 이는 `requestAnimationFrame` 등을 통해 JS가 렌더링 타이밍을 효율적으로 제어할 수 있기 때문으로 보입니다. 반면 SVG Filter는 애니메이션과 동시에 필터 연산까지 처리하느라 FPS가 낮게 나옵니다.
+
+## 왜 CSS보다 SVG의 렌더링 시간이 더 빠른 결과가 나왔을까?
+
+어떤 경우에는 CSS보다 SVG의 렌더링 시간이 더 빠른데, 이유는 아래와 같습니다.
+
+1. **SVG는 HTML DOM과 분리된 렌더링 트리**를 가지므로 레이아웃 계산을 덜합니다.
+2. **transform + opacity는 GPU 가속을 받아** 메인 스레드의 부담이 줄어듭니다.
+3. SVG DOM은 작고 단순할수록 효율적입니다.
+4. 브라우저가 SVG 렌더링을 **별도 레이어로 처리**하여 최적화가 잘 됩니다.
+
+<br />
+<br />
+
+---
+
+# 결론: 어떤 방식이 좋을까?
+
+- **CSS만 쓰는 게 좋은 경우**: **정적 UI**
+  텍스트 길이가 고정되어 있고, 단순한 구현이 필요할 때.
+- **CSS+JS 조합이 좋은 경우**: **동적 동작 제어가 필요한 UI**
+  동적인 콘텐츠와 복잡한 상호작용이 필요할 때
+- **SVG Filter가 좋은 경우**: 성능이 중요한 경우, 부드럽고 유기적인 효과가 필요할 때
+  인터렉션이 추가되어도 전반적으로 성능이 우수하기 때문에 성능에 민감한 인터랙션이 필요한 경우
+
+제 경우에는 블로그 포스트 제목이 글마다 길이가 다르고, 시각적으로 정말 매끄러운 효과를 주고 싶어서 SVG Filter를 선택했습니다. 성능, 시각적 효과, 동적 대응 필요성 등을 종합적으로 고려하여 프로젝트에 맞는 적절한 기술을 선택하시면 됩니다.
+
+{/* - 번외 2. GPU 가속 */}
+{/* 애니메이션 성능 얘기를 할 때 빠지지 않는 개념이 바로 **GPU 가속입니다.** 브라우저가 어떤 작업을 **CPU에서 할지**, 어떤 걸 **GPU에 넘길지**에 따라 프레임 레이트가 달라집니다. */}
+{/* 브라우저가 화면을 그리는 맨 마지막 단계인 Composite 결과를 통해 픽셀로 표시하는 단계에서 GPU 또는 CPU 처리 여부가 정해집니다. `transform`, `opacity`, `filter` 같은 속성은 GPU에서 바로 처리가 가능하기 때문에 성능이 크게 향상됩니다. */}
+{/* `transform` 속성이 위치, 회전, 크기를 변경함에도 불구하고 빠르게 처리되는 이유는 다음과 같습니다: */}
+{/* 1. **레이아웃과 페인트 단계를 건너뜀:** 기존 화면 위에 그대로 얹어서 위치만 변경하므로 전체 레이아웃 재계산이 필요 없습니다. */}
+{/* 2. **Compositor Thread에서 독립적으로 실행:** 메인 스레드(JavaScript, DOM 이벤트 등)와 분리되어 처리되므로 다른 작업에 영향을 덜 받습니다. */}
+{/* 3. **GPU에서 처리:** 애니메이션이 프레임 드롭 없이 부드럽게 실행됩니다. */}
+{/* `hover` 시에 `width`, `height`, `margin`, `padding` 등을 변경하는 CSS 애니메이션을 적용하는 경우가 많은데, 이런 애니메이션은 아래의 이유로 실제로는 덜 부드럽게 보일 수 있습니다. */}
+{/* 4. `width`, `margin`, `top` 등의 변경은 레이아웃 **변경**을 유발합니다. 즉, 해당 요소뿐 아니라 **주변 요소의 위치까지 다시 계산** 해야 하므로 연산량이 많아지고, CPU를 사용하는 메인 스레드에서 처리됩니다. */}
+{/* 5. 이러한 작업은 **페인트**와 **컴포짓** 단계를 모두 거쳐야 하기 때문에, 프레임 드롭이 발생하거나 **인터랙션 중 버벅거림**이 발생할 수 있습니다. */}
+{/* 6. 반면 `transform: translateY(...)`를 사용하면 레이아웃에 영향을 주지 않고, **GPU에서 직접 픽셀 위치만 이동시키기** 때문에 부드럽고 효율적인 애니메이션을 구현할 수 있습니다. */}
