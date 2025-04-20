@@ -1,7 +1,7 @@
 import { glob } from "astro/loaders";
 import { defineCollection, z } from "astro:content";
 
-export const CategoryEnum = z.enum(["test"]);
+export const CategoryEnum = z.enum(["개발"]);
 export type CategoryEnum = z.infer<typeof CategoryEnum>;
 
 const blog = defineCollection({
