@@ -1,0 +1,35 @@
+---
+interface Props {
+  content: string;
+  color: string;
+}
+
+const { content, color: hrColor } = Astro.props;
+const hrContent = `"${content}"`;
+---
+
+<hr class="custom-divider mx-auto my-12" />
+<style define:vars={{ hrContent, hrColor }}>
+  .custom-divider {
+    border: none;
+    overflow: hidden;
+    position: relative;
+    height: 40px;
+  }
+
+  .custom-divider::before {
+    content: var(--hrContent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 0.05em;
+    color: var(--hrColor);
+    pointer-events: none;
+    font-size: 40px;
+  }
+</style>
