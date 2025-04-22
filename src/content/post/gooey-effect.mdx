@@ -67,7 +67,7 @@ Gooey Effect의 핵심은 다른 요소들과 유기적인 연결입니다. 이�
 <p
   class="codepen"
   data-height="300"
-  data-default-tab="html,result"
+  data-default-tab="result,html"
   data-slug-hash="MYYaJMp"
   data-pen-title="gooey-css"
   data-user="NaGyeong-Park"
@@ -105,7 +105,7 @@ CSS 만으로 구현할 때는 가상 요소를 이용하여 텍스트 가장자
 <p
   class="codepen"
   data-height="300"
-  data-default-tab="html,result"
+  data-default-tab="result,html"
   data-slug-hash="yyyYMNM"
   data-pen-title="gooey-css-javascript"
   data-user="NaGyeong-Park"
@@ -144,22 +144,16 @@ CSS와 Javascript를 결합한 방식은 앞서 본 CSS 방식의 한계를 극�
 <p
   class="codepen"
   data-height="300"
-  data-default-tab="html,result"
+  data-default-tab="result,html"
   data-slug-hash="OPPypZX"
   data-pen-title="gooey-filter"
   data-user="NaGyeong-Park"
   style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
 ></p>
 <script async src="https://public.codepenassets.com/embed/index.js"></script>
-SVG Filter를 활용한 방식은 세 가지 중에서 가장 부드럽고 유기적인 느낌을
-만들어냅니다. 텍스트에 블러 효과를 적용한 후, 알파값을 기준으로 마스크를
-생성하는 방식이기 때문입니다.
-
-적용할 텍스트의 전체 컨테이너를 `SourceGraphic`으로 받아, `feGaussianBlur`로 텍스트의 경계를 흐리게 만들고, `feColorMatrix`로 알파값을 조정하면 텍스트 경계에 자연스러운 윤곽이 생깁니다. 이렇게 만든 효과를 `feComposite` 를 이용해 원래 텍스트랑 합칩니다.
-
-가장 부드럽고 유기적인 효과를 느낄 수 있습니다. 하지만 단점도 분명합니다. 필터 영역이 넓어질수록 GPU 비용이 커지고 성능이 떨어질 수 있습니다. 또, 필터가 적용된 요소는 결과적으로 하나의 비트맵처럼 처리되기 때문에 디버깅이나 세밀한 조정이 어렵습니다.
-
-SVG Filter를 활용한 방식은 세 가지 중에서 가장 부드럽고 유기적인 Gooey 효과를 만들어냅니다. 이 방식의 핵심은 텍스트에 블러 효과를 적용한 후, 알파 채널을 조정하여 자연스러운 윤곽을 생성하는 것입니다.
+SVG Filter를 활용한 방식은 세 가지 중에서 가장 부드럽고 유기적인 Gooey 효과를
+만들어냅니다. 텍스트에 블러 효과를 적용한 후, 알파 채널을 조정하여 자연스러운
+윤곽을 생성하기 때문입니다.
 
 ### 구현 원리
 
@@ -221,7 +215,7 @@ CSS, CSS+JS, 그리고 SVG Filter 세 가지 구현 방식에 정량적으로 �
 ### 3. 코드 효율성 지표: 스크립팅 시간
 
 - 스크립팅 시간(Scripting Time)은 브라우저가 자바스크립트를 실행하는 데 걸리는 시간입니다. 복잡한 연산이 포함된 경우 크게 증가할 수 있습니다.
-- 이 지표는 코드의 복잡성과 연산 비용을 간접적으로 측정하여, 성능 병목 지점을 파악하고 최적화 방향을 설정하는 데 유용합니다.
+- 스크립팅 시간은 코드의 복잡성과 연산 비용을 간접적으로 측정하여, 성능 병목 지점을 파악하고 최적화 방향을 설정하는 데 유용합니다.
 
 <br />
 
@@ -254,7 +248,7 @@ SVG Filter가 대부분의 지표에서 우수한 성능을 보여줍니다. GPU
 <p
   class="codepen"
   data-height="300"
-  data-default-tab="html,result"
+  data-default-tab="result"
   data-slug-hash="PwwPpeN"
   data-pen-title="gooey-hover"
   data-user="NaGyeong-Park"
@@ -279,7 +273,7 @@ SVG Filter는 평균 FPS, 최소 FPS, 페인팅 시간 측면에서 좋은 성�
   <p
     class="codepen"
     data-height="300"
-    data-default-tab="html,result"
+    data-default-tab="result"
     data-slug-hash="pvvjPoV"
     data-pen-title="gooey-animation"
     data-user="NaGyeong-Park"
@@ -335,9 +329,13 @@ SVG Filter는 평균 FPS, 최소 FPS, 페인팅 시간 측면에서 좋은 성�
 - 인터랙션이 추가되어도 전반적인 성능 저하가 적어야 하는 경우
 
 <br />제 블로그의 경우, 포스트 제목 길이가 글마다 다르고 시각적으로 매끄러운
-효과를 주고 싶었기 때문에 SVG Filter를 선택했습니다. 이 글이 여러분의
-꒦꒷꒦꒷꒦Gooey Effect꒷꒦꒷꒦꒷ 구현에 필요한 기술 선택에 도움이 되었기를
-바랍니다!
+효과를 주고 싶었기 때문에 SVG Filter를 선택했습니다. 이 글이 여러분의 Gooey
+Effect 구현에 도움이 되었기를 바랍니다.
+
+<CustomHr
+  color="#d7e7b5"
+  content="꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷꒦꒷"
+/>
 
 {/* - 번외 2. GPU 가속 */}
 {/* 애니메이션 성능 얘기를 할 때 빠지지 않는 개념이 바로 **GPU 가속입니다.** 브라우저가 어떤 작업을 **CPU에서 할지**, 어떤 걸 **GPU에 넘길지**에 따라 프레임 레이트가 달라집니다. */}
